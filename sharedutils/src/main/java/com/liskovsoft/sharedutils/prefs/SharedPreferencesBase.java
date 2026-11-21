@@ -165,6 +165,25 @@ public class SharedPreferencesBase {
         }
     }
 
+    /**
+     * SmartFin: permanently removes a stored value (plain file and legacy preference).
+     */
+    final public void removeData(String key) {
+        File source = getStorageFile(key);
+
+        if (source != null && source.exists() && !source.delete()) {
+            FileHelpers.stringToFile("", source);
+        }
+
+        if (mPrefs.contains(key)) {
+            putString(key, null);
+        }
+
+        if (mDataHashes != null) {
+            mDataHashes.remove(key);
+        }
+    }
+
     private File getStorageFile(String key) {
         String prefsDir = getPrefsDir();
 

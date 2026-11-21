@@ -30,6 +30,7 @@ final public class GlobalPreferences extends SharedPreferencesBase {
     private static final String ENABLE_CHANNELS_SERVICE = "enable_channels_service";
     private static final String PREFERRED_DNS_TYPE = "preferred_dns_type";
     private static final String IS_24_HOUR_LOCALE_ENABLED = "is_24_hour_locale_enabled";
+    private static final String CONTENT_BLOCK_SERVER_URL = "content_block_server_url";
     private static final List<Runnable> sCallbacks = new CopyOnWriteArrayList<>(); // fix ConcurrentModificationException
 
     private GlobalPreferences(Context context) {
@@ -101,12 +102,23 @@ final public class GlobalPreferences extends SharedPreferencesBase {
     //    putString(OAUTH2_ACCOUNT_DATA, data);
     //}
 
-    public String getOAuth2AccountData() {
-        return getData(OAUTH2_ACCOUNT_DATA);
+    /**
+     * SmartFin: Google Drive backup was removed. Deletes the Drive sign-in tokens an older version may have stored.
+     */
+    public void clearLegacyOAuth2AccountData() {
+        removeData(OAUTH2_ACCOUNT_DATA);
     }
 
-    public void setOAuth2AccountData(String data) {
-        setData(OAUTH2_ACCOUNT_DATA, data);
+    /**
+     * SmartFin: user-selected SponsorBlock server (mirror or self-hosted). Null means the default server.
+     */
+    @Nullable
+    public String getContentBlockServerUrl() {
+        return getString(CONTENT_BLOCK_SERVER_URL, null);
+    }
+
+    public void setContentBlockServerUrl(@Nullable String url) {
+        putString(CONTENT_BLOCK_SERVER_URL, url);
     }
 
     //public String getMediaServiceData() {
